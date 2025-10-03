@@ -1,0 +1,182 @@
+class Tienda():
+    def __init__(self):
+        self.num_factura = 0
+        self.dinero_caja = 0
+        self.facturas = []
+        self.productos = [Producto(1, "Lápiz", "papeleria", 50, 10, 1500),Producto(2, "Arroz 1kg", "supermercado", 30, 5, 2800),Producto(3,"Jabón Antibacterial", "drogueria", 40, 8, 3200),Producto(4, "Cuaderno ", "papeleria", 25, 5, 4500)]
+    
+    def agregar_productos(self, producto):
+        self.productos.append(producto)
+    
+    def mostrar_productos(self): #cambiar esta parte luego
+        print(f"{'Código':<10} {'Nombre':<25} {'Tipo':<15} {'Stock':<10} {'Mínimo':<10} {'Precio':<16}")
+
+        for producto in self.productos:
+            print(f" {producto.codigo:<9} {producto.nombre:<24} {producto.tipo_producto:<14} "
+                f"{producto.cantidad_bodega:<9} {producto.cantidad_minima:<9} "
+                f"${producto.valor_unitario:<14.2f}")
+    
+    def mostrar_facturas(self):
+        if self.facturas == []:
+            print("no hay ninguna venta")
+            return None
+
+        for factura in self.facturas:
+            print("")
+            print(f"numero de factura: {factura.num_factura}")
+            factura.mostrar_factura()
+            print("")
+            print("_"*50)
+            print("")
+
+    def mostrar_facturas_detalladas(self):
+        if self.facturas == []:
+            print("no hay ninguna venta")
+            return None
+
+        for factura in self.facturas:
+            print("")
+            print(f"numero de factura: {factura.num_factura}")
+            factura.mostrar_factura_detallada()
+            print("")
+            print("_"*50)
+            print("")
+            
+    def comprobar_existencia_producto_por_codigo(self, codigo):
+        for producto in self.productos:
+            if producto.codigo == codigo:
+                return producto
+        return False
+    
+    def vender_productos(self,factura):
+        if not factura.factura:
+            print("la factura esta vacia :/")
+            return None
+
+        factura.num_factura = self.num_factura
+        self.num_factura += 1
+        self.facturas.append(factura)
+        print(f"la venta se realizo correctamente- n°factura {factura.num_factura}")
+      
+class Producto():
+    def __init__(self,codigo,producto_nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario):
+        self.codigo = codigo
+        self.nombre = producto_nombre
+        self.tipo_producto = tipo_producto
+        self.cantidad_bodega  = cantidad_bodega
+        self.cantidad_minima = cantidad_minima
+        self.valor_unitario = valor_unitario
+    
+    def __str__(self):
+        return f"{self.codigo} {self.nombre} (${self.valor_unitario:,.2f}) - Stock: {self.cantidad_bodega}"
+        
+class Factura():
+    def __init__(self):
+        self.num_factura = None
+        self.factura = []
+           
+    def agregar_producto(self,producto,cantidad_venta):
+        for ventas in self.factura:
+            if ventas.nombre_producto == producto.nombre:#si el producto ya esta en la factura solo lo suma
+                ventas.cantidad_vendida += cantidad_venta
+                ventas.precio_total = (ventas.precio_unitario + (ventas.iva * ventas.precio_unitario)) * ventas.cantidad_vendida
+                producto.cantidad_bodega -= cantidad_venta
+                print("el producto se agrego correctamente")
+                return None
+                        
+        self.factura.append(Venta(producto,cantidad_venta))
+        
+        producto.cantidad_bodega -= cantidad_venta
+        
+        print("el producto se agrego correctamente")
+
+    def mostrar_factura(self):        
+        if not self.factura:
+            print("No hay ventas registradas")
+            return
+        
+        print(f"{'Código':<8} {'Producto':<15} {'Cant':>5} {'P.Unit':>8} {'Total':>10}")
+        
+        total_general = 0
+        
+        for producto in self.factura:
+            codigo = producto.codigo
+            nombre = producto.nombre_producto
+            cantidad = producto.cantidad_vendida
+            precio = producto.precio_total
+            total = cantidad * precio
+            total_general += total
+            
+            print(f"{codigo:<8} {nombre:<15} {cantidad:>5} ${precio:>7.2f} ${total:>9.2f}")
+        print("")
+        print(f"{'TOTAL A PAGAR:':<38} ${total_general:>12.2f}")
+    
+    def mostrar_factura_detallada(self):
+        if not self.factura:
+            print("No hay ventas registradas")
+            return        
+        
+        total_general = 0
+        subtotal = 0
+        total_iva = 0
+
+        print(f"{'Código':<8} {'Producto':<15} {'Cant':>5} {'P.Unit':>8} {'Subtotal':>9} {'IVA%':>5} {'IVA$':>8} {'Total':>10}")
+        
+        for producto in self.factura:
+            codigo = producto.codigo
+            nombre = producto.nombre_producto
+            cantidad = producto.cantidad_vendida
+            precio_unitario = producto.precio_unitario  
+            iva_porcentaje = producto.iva  
+            precio_total = producto.precio_total  
+            
+            # Usar los valores directamente de la clase
+            subtotal_producto = cantidad * precio_unitario
+            iva_producto = cantidad * (precio_total - precio_unitario)  # Diferencia entre con IVA y sin IVA
+            total_producto = cantidad * precio_total
+            
+            subtotal += subtotal_producto
+            total_iva += iva_producto
+            total_general += total_producto
+            
+            print(f"{codigo:<8} {nombre:<15} {cantidad:>5} ${precio_unitario:>7.2f} ${subtotal_producto:>8.2f} {iva_porcentaje:>5}% ${iva_producto:>7.2f} ${total_producto:>9.2f}")        
+
+        print("")
+        print(f"{'SUBTOTAL:':<48} ${subtotal:>10.2f}")
+        print(f"{'IVA:':<48} ${total_iva:>10.2f}")
+        print(f"{'TOTAL A PAGAR:':<48} ${total_general:>10.2f}")   
+    
+    def actualizar_caja(self,tienda):
+        for producto in self.factura:
+            tienda.dinero_caja += producto.precio_total 
+    
+    def cancelar_venta_actual(self,tienda):
+        if not self.factura:
+            print("No hay venta en proceso")
+            return False
+
+        for producto_factura in self.factura:
+            producto_tienda = tienda.comprobar_existencia_producto_por_codigo(producto_factura.codigo)
+            if producto_tienda:
+                producto_tienda.cantidad_bodega += producto_factura.cantidad_vendida
+                print(f"Stock restaurado: {producto_tienda.nombre} (+{producto_factura.cantidad_vendida})")
+        self.factura = []
+        
+class Venta():
+    def __init__(self,producto,cantidad_venta):
+        self.codigo = producto.codigo
+        self.nombre_producto = producto.nombre
+        self.cantidad_vendida = cantidad_venta
+        self.precio_unitario = producto.valor_unitario
+        self.iva = 0.15 # hay que cambiar
+        self.precio_total = self.calcular_iva()
+    
+    def __str__(self):
+        return f"{self.nombre_producto}---{self.cantidad_vendida}---${self.precio_unitario:,.2f}---${self.precio_total:,.2f}---{self.iva*100}%"
+
+    def calcular_iva(self):
+        return (self.precio_unitario +(self.iva * self.precio_unitario)) * self.cantidad_vendida
+        
+    
+
+
