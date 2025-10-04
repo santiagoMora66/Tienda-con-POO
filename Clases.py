@@ -106,7 +106,7 @@ class Tienda():
         try:
             cantidad = int(input("cuantos productos vas a comprar: "))
             if cantidad <= 0:
-                print("digita nu numero mayor a 0")
+                print("digita un numero mayor a 0")
                 return None
         except :
             print("digita un numero correcto")
@@ -120,8 +120,24 @@ class Tienda():
         else:
             print("producto no encontrado")
             return None
-            
-            
+    
+    def realizar_todos_los_pedidos(self):
+        self.mostrar_productos()
+        print("")
+        try:
+            cantidad = int(input("cuantos cantidad vas a comprar en general: "))
+            if cantidad <= 0:
+                print("digita una cantidad valida")
+                return None        
+        except:
+            print("digita un numero correcto")
+            return None
+        
+        productos_actualizados = 0
+        for producto in self.productos:        
+                producto.cantidad_bodega += cantidad
+                productos_actualizados += 1
+        print(f"se actualizaron {productos_actualizados} productos")
 
 class Factura():
     def __init__(self):

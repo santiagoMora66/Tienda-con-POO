@@ -164,11 +164,11 @@ def menu_pedidos(tienda):
                 tienda.realizar_pedido_por_productos()
                 pausar_pantalla()
                 limpiar_pantalla()
-                
             case 2:
-                #realizarTodosLosPedido(tienda)
-                os.system('pause')
-            
+                limpiar_pantalla()
+                tienda.realizar_todos_los_pedidos()
+                pausar_pantalla()
+                limpiar_pantalla()
             case 3:
                 break
             case _:
@@ -243,6 +243,7 @@ def menu_principal():
                     mostrar_mensaje('no se ha creado la tienda. ejecutar la opcion 1')
             
             case 6:
+                limpiar_pantalla()
                 break
             
             case other:
