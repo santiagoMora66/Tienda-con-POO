@@ -75,7 +75,7 @@ class Tienda():
             print("no hay ninguna venta")
             return None
             
-        if self.comprobar_existencia_producto_por_codigo(codigo) != None:
+        if self.comprobar_existencia_producto_por_codigo(codigo):
             print("")
             cantidad_producto_vendida = 0
             ganancia_producto = 0
@@ -93,6 +93,36 @@ class Tienda():
             else:
                 print("no se ha encontrado ninguna venta de este producto")   
     
+    def realizar_pedido_por_productos(self):
+        self.mostrar_productos()
+        print("")
+        
+        try:
+            codigo = int(input("digita el codigo del producto: "))   
+        except :
+            print("digita un numero correcto por favor")
+            return None
+        
+        try:
+            cantidad = int(input("cuantos productos vas a comprar: "))
+            if cantidad <= 0:
+                print("digita nu numero mayor a 0")
+                return None
+        except :
+            print("digita un numero correcto")
+            return None
+        
+        producto = self.comprobar_existencia_producto_por_codigo(codigo)
+        
+        if producto:
+            producto.cantidad_bodega += cantidad
+            print("la cantidad del producto se añadio correctamente")
+        else:
+            print("producto no encontrado")
+            return None
+            
+            
+
 class Factura():
     def __init__(self):
         self.num_factura = None

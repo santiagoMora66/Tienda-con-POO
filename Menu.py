@@ -160,8 +160,10 @@ def menu_pedidos(tienda):
         opcion = int(input('Opcion --> '))
         match opcion:
             case 1:
-                #realizarPedidoPorProductos(tienda)
-                os.system('pause')
+                limpiar_pantalla()
+                tienda.realizar_pedido_por_productos()
+                pausar_pantalla()
+                limpiar_pantalla()
                 
             case 2:
                 #realizarTodosLosPedido(tienda)
