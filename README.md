@@ -1,2 +1,0 @@
-﻿# Tienda-con-POO
-

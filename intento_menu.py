@@ -11,9 +11,8 @@ def manejoVentas(tienda):
         print('1. Realizar venta ')
         print('2. Mostrar Facturas Resumen')
         print('3. Mostrar Facturas con detalle ')
-        print('4. Mostrar factura detalle ')
-        print('5. Mostrar venta por producto ')
-        print('6. Regresar menu principal ')
+        print('4. Mostrar venta por producto ')
+        print('5. Regresar menu principal ')
         print('------------------------------ ')
         
         opcion = int(input('Opcion --> '))
@@ -30,7 +29,7 @@ def manejoVentas(tienda):
                 tienda.mostrarFacturasDetalle()
                 os.system('pause')
             case 4:
-                mostrarFactura(tienda)
+                tienda.consultar_venta_por_producto()
                 os.system('pause')
             
             case 5:

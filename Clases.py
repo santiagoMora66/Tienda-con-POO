@@ -1,3 +1,15 @@
+class Producto():
+    def __init__(self,codigo,producto_nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario):
+        self.codigo = codigo
+        self.nombre = producto_nombre
+        self.tipo_producto = tipo_producto
+        self.cantidad_bodega  = cantidad_bodega
+        self.cantidad_minima = cantidad_minima
+        self.valor_unitario = valor_unitario
+    
+    def __str__(self):
+        return f"{self.codigo} {self.nombre} (${self.valor_unitario:,.2f}) - Stock: {self.cantidad_bodega}"
+  
 class Tienda():
     def __init__(self):
         self.num_factura = 0
@@ -5,7 +17,7 @@ class Tienda():
         self.facturas = []
         self.productos = [Producto(1, "Lápiz", "papeleria", 50, 10, 1500),Producto(2, "Arroz 1kg", "supermercado", 30, 5, 2800),Producto(3,"Jabón Antibacterial", "drogueria", 40, 8, 3200),Producto(4, "Cuaderno ", "papeleria", 25, 5, 4500)]
     
-    def agregar_productos(self, producto):
+    def agregar_producto(self, producto):
         self.productos.append(producto)
     
     def mostrar_productos(self): #cambiar esta parte luego
@@ -57,19 +69,30 @@ class Tienda():
         self.num_factura += 1
         self.facturas.append(factura)
         print(f"la venta se realizo correctamente- n°factura {factura.num_factura}")
-      
-class Producto():
-    def __init__(self,codigo,producto_nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario):
-        self.codigo = codigo
-        self.nombre = producto_nombre
-        self.tipo_producto = tipo_producto
-        self.cantidad_bodega  = cantidad_bodega
-        self.cantidad_minima = cantidad_minima
-        self.valor_unitario = valor_unitario
+
+    def consultar_venta_por_producto(self, codigo):
+        if self.facturas == []:
+            print("no hay ninguna venta")
+            return None
+            
+        if self.comprobar_existencia_producto_por_codigo(codigo) != None:
+            print("")
+            cantidad_producto_vendida = 0
+            ganancia_producto = 0
+            print("Código---Producto---Cantidad---Precio Unitario---IVA---Precio Total---Total")
+            for factura in self.facturas:
+                for producto in factura.factura:
+                    if producto.codigo == codigo:
+                        print(producto)
+                        cantidad_producto_vendida += producto.cantidad_vendida
+                        ganancia_producto += producto.total
+            print("")
+            if cantidad_producto_vendida > 0:
+                print(f"cantidad del producto vendida = {cantidad_producto_vendida}")                
+                print(f"ganancias del producto = {ganancia_producto}")
+            else:
+                print("no se ha encontrado ninguna venta de este producto")   
     
-    def __str__(self):
-        return f"{self.codigo} {self.nombre} (${self.valor_unitario:,.2f}) - Stock: {self.cantidad_bodega}"
-        
 class Factura():
     def __init__(self):
         self.num_factura = None
@@ -146,10 +169,6 @@ class Factura():
         print(f"{'IVA:':<48} ${total_iva:>10.2f}")
         print(f"{'TOTAL A PAGAR:':<48} ${total_general:>10.2f}")   
     
-    def actualizar_caja(self,tienda):
-        for producto in self.factura:
-            tienda.dinero_caja += producto.precio_total 
-    
     def cancelar_venta_actual(self,tienda):
         if not self.factura:
             print("No hay venta en proceso")
@@ -170,10 +189,9 @@ class Venta():
         self.precio_unitario = producto.valor_unitario
         self.iva = 0.15 # hay que cambiar
         self.precio_total = self.calcular_iva()
-    
+        self.total = self.cantidad_vendida * self.precio_total 
     def __str__(self):
-        return f"{self.nombre_producto}---{self.cantidad_vendida}---${self.precio_unitario:,.2f}---${self.precio_total:,.2f}---{self.iva*100}%"
-
+        return (f"{self.codigo}---{self.nombre_producto}---{self.cantidad_vendida}---${self.precio_unitario}---{self.iva*100}%---${self.precio_total}---${self.total}")
     def calcular_iva(self):
         return (self.precio_unitario +(self.iva * self.precio_unitario)) * self.cantidad_vendida
         
