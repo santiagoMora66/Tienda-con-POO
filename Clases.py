@@ -1,3 +1,5 @@
+import os
+
 class Producto():
     def __init__(self,codigo,producto_nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario):
         self.codigo = codigo
@@ -15,7 +17,8 @@ class Tienda():
         self.num_factura = 0
         self.dinero_caja = 0
         self.facturas = []
-        self.productos = [Producto(1, "Lápiz", "papeleria", 50, 10, 1500),Producto(2, "Arroz 1kg", "supermercado", 30, 5, 2800),Producto(3,"Jabón Antibacterial", "drogueria", 40, 8, 3200),Producto(4, "Cuaderno ", "papeleria", 25, 5, 4500)]
+        self.productos = self.cargar_archivo()   
+       #self.productos = [Producto(1, "Lápiz", "papeleria", 50, 10, 1500),Producto(2, "Arroz 1kg", "supermercado", 30, 5, 2800),Producto(3,"Jabón Antibacterial", "drogueria", 40, 8, 3200),Producto(4, "Cuaderno ", "papeleria", 25, 5, 4500)]
     
     def agregar_producto(self, producto):
         self.productos.append(producto)
@@ -139,6 +142,33 @@ class Tienda():
                 productos_actualizados += 1
         print(f"se actualizaron {productos_actualizados} productos")
 
+    def cargar_archivo(self):
+        
+        productos = []
+        # Crear archivo si no existe
+        if not os.path.exists("Productos.dat"):
+            archivo = open("Productos.dat", "w")
+        
+        archivo = open("Productos.dat", "r")
+        
+        for linea in archivo.readlines():
+            producto = self.convertir_texto_a_producto(linea)
+            productos.append(producto)
+        
+        return productos
+    
+    def convertir_texto_a_producto(self, linea):
+        linea = linea.split(",")
+        codigo = int(linea[0])
+        nombre = str(linea[1])
+        tipo_producto = str(linea[2])
+        cantidad_bodega = int(linea[3])
+        cantidad_minima = int(linea[4])
+        valor_unitario = int(linea[5])
+                
+        return Producto(codigo,nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario)
+
+    
 class Factura():
     def __init__(self):
         self.num_factura = None

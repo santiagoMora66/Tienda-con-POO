@@ -1,10 +1,6 @@
 import os
-from Clases import Tienda, Factura
-
-def crear_archivo_productos_si_no_existe():
-    if not os.path.exists("productos.dat"):
-        f = open("productos.dat", "w")
-    
+from Clases import Tienda, Factura, Producto
+     
 def mostrar_mensaje(mensaje):
     limpiar_pantalla()
     print(mensaje)
@@ -173,7 +169,45 @@ def menu_pedidos(tienda):
                 break
             case _:
                 print('Error: opcion invalida ')
+
+def manejoEstadisticas(tienda):
+    while True:
+        print('Menu Estadísticas')
+        print('------------------------------')
+        print('1. Total ventas ')
+        print('2. Promedio de ventas')
+        print('3. Venta por Producto ')
+        print('4. Promedio venta producto')
+        print('5. Producto más vendido ')
+        print('6. Regresar ')
+        print('------------------------------ ')
+        
+        opcion = int(input('Opcion --> '))
+        
+        match opcion:
+            case 1:
+                #tienda.totalVentaProductos()
+                os.system('pause')
+            
+            case 2:
+                #tienda.promedioVentas()
+                os.system('pause')
                 
+            case 3:
+                #consultarVentaProducto(tienda)
+                os.system('pause')
+            case 4:
+                #tienda.promedioVentasProducto()
+                os.system('pause')
+            
+            case 5:
+                #tienda.productoMasVendido()
+                os.system('pause')
+            case 6:
+                break
+            case _:
+                print('Error: opcion invalida ')
+                                
 def pausar_pantalla():
     os.system("pause")
 
@@ -185,7 +219,6 @@ def crearTienda():
 
 def menu_principal():
     limpiar_pantalla()
-    crear_archivo_productos_si_no_existe()
     tienda_creada=False
         
     while True:
@@ -237,8 +270,9 @@ def menu_principal():
                     mostrar_mensaje('no se ha creado la tienda. ejecutar la opcion 1')
             case 5:
                 if tienda_creada:
-                    # manejoEstadisticas(tienda)
-                    pass
+                    limpiar_pantalla()
+                    manejoEstadisticas(tienda)
+                    limpiar_pantalla()
                 else:
                     mostrar_mensaje('no se ha creado la tienda. ejecutar la opcion 1')
             
@@ -248,7 +282,6 @@ def menu_principal():
             
             case other:
                 mostrar_mensaje('error opcion invalida')
-
 
 
 
