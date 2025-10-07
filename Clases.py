@@ -80,11 +80,24 @@ class Tienda():
         self.facturas.append(factura)
         print(f"la venta se realizo correctamente- n°factura {factura.num_factura}")
 
-    def consultar_venta_por_producto(self, codigo):
+    def pedir_codigo_producto(self):
+        try:
+            codigo = int(input("Digita el código del producto para consultar todas sus ventas: "))
+            if codigo <= 0:
+                print("El código debe ser un número positivo")
+                return None 
+            return codigo
+        except ValueError:
+            print("Error: El código debe ser un número entero")
+            return None
+    
+    def consultar_venta_por_producto(self):        
         if self.facturas == []:
             print("no hay ninguna venta")
             return None
-            
+
+        codigo = self.pedir_codigo_producto()
+
         if self.comprobar_existencia_producto_por_codigo(codigo):
             print("")
             cantidad_producto_vendida = 0

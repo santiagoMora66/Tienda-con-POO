@@ -137,12 +137,7 @@ def menu_manejoVentas(tienda):
                 limpiar_pantalla()
             case 4:
                 limpiar_pantalla()
-                try:
-                    codigo = int(input("digita el codigo del producto para consultar todas sus ventas: ")) 
-                    limpiar_pantalla()
-                    tienda.consultar_venta_por_producto(codigo)
-                except ValueError:
-                    print("el codigo es incorrecto")
+                tienda.consultar_venta_por_producto()
                 pausar_pantalla()
                 limpiar_pantalla()
             case 5:
@@ -176,7 +171,6 @@ def menu_pedidos(tienda):
                 break
             case _:
                 print('Error: opcion invalida ')
-
 
 def menu_estadisticas(tienda):
     while True:
