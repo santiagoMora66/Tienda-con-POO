@@ -1,6 +1,12 @@
 import os
 from Clases import Tienda, Factura, Producto
-     
+
+def pausar_pantalla():
+    os.system("pause")
+
+def limpiar_pantalla():
+    os.system("cls")
+   
 def mostrar_mensaje(mensaje):
     limpiar_pantalla()
     print(mensaje)
@@ -15,7 +21,8 @@ def mostrar_productos(tienda):
     print("")
     pausar_pantalla()
     limpiar_pantalla()
-    
+
+# menus 
 def menu_realizar_venta(tienda):
     factura = Factura()
     while True:
@@ -170,7 +177,8 @@ def menu_pedidos(tienda):
             case _:
                 print('Error: opcion invalida ')
 
-def manejoEstadisticas(tienda):
+
+def menu_estadisticas(tienda):
     while True:
         print('Menu Estadísticas')
         print('------------------------------')
@@ -208,12 +216,6 @@ def manejoEstadisticas(tienda):
             case _:
                 print('Error: opcion invalida ')
                                 
-def pausar_pantalla():
-    os.system("pause")
-
-def limpiar_pantalla():
-    os.system("cls")
-
 def crearTienda():
     return Tienda()
 
@@ -271,13 +273,15 @@ def menu_principal():
             case 5:
                 if tienda_creada:
                     limpiar_pantalla()
-                    manejoEstadisticas(tienda)
+                    menu_estadisticas(tienda)
                     limpiar_pantalla()
                 else:
                     mostrar_mensaje('no se ha creado la tienda. ejecutar la opcion 1')
             
             case 6:
                 limpiar_pantalla()
+                if  tienda_creada:
+                    tienda.guardar_archivo()
                 break
             
             case other:

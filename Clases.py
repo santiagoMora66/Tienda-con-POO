@@ -1,5 +1,12 @@
 import os
 
+def pausar_pantalla():
+    os.system("pause")
+
+def limpiar_pantalla():
+    os.system("cls")
+
+
 class Producto():
     def __init__(self,codigo,producto_nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario):
         self.codigo = codigo
@@ -82,11 +89,11 @@ class Tienda():
             print("")
             cantidad_producto_vendida = 0
             ganancia_producto = 0
-            print("Código---Producto---Cantidad---Precio Unitario---IVA---Precio Total---Total")
+            print(f"{'CÓDIGO':<10} {'PRODUCTO':<20} {'CANT':<8} {'P.UNIT':<10} {'IVA':<6} {'P.TOTAL':<10} {'TOTAL':<10}")
             for factura in self.facturas:
                 for producto in factura.factura:
                     if producto.codigo == codigo:
-                        print(producto)
+                        print(f"{producto} factura n° {factura.num_factura}")
                         cantidad_producto_vendida += producto.cantidad_vendida
                         ganancia_producto += producto.total
             print("")
@@ -94,18 +101,26 @@ class Tienda():
                 print(f"cantidad del producto vendida = {cantidad_producto_vendida}")                
                 print(f"ganancias del producto = {ganancia_producto}")
             else:
-                print("no se ha encontrado ninguna venta de este producto")   
+                limpiar_pantalla()
+                print("no se ha encontrado ninguna venta de este producto")
+        else:
+            print("el producto no existe en el inventario")
     
     def realizar_pedido_por_productos(self):
         self.mostrar_productos()
         print("")
-        
         try:
-            codigo = int(input("digita el codigo del producto: "))   
+            codigo = int(input("digita el codigo del producto: ")) 
+            producto = self.comprobar_existencia_producto_por_codigo(codigo)
+            if not producto:
+                limpiar_pantalla()
+                print("producto no encontrado, seleccione un producto que exista")
+                return None
         except :
             print("digita un numero correcto por favor")
             return None
-        
+        limpiar_pantalla()
+
         try:
             cantidad = int(input("cuantos productos vas a comprar: "))
             if cantidad <= 0:
@@ -114,7 +129,7 @@ class Tienda():
         except :
             print("digita un numero correcto")
             return None
-        
+        limpiar_pantalla()
         producto = self.comprobar_existencia_producto_por_codigo(codigo)
         
         if producto:
@@ -168,7 +183,15 @@ class Tienda():
                 
         return Producto(codigo,nombre,tipo_producto,cantidad_bodega,cantidad_minima,valor_unitario)
 
-    
+    def guardar_archivo(self):
+        archivo = open("Productos.dat", "w")
+        for producto in self.productos:
+                linea = self.convertir_producto_a_texto(producto)
+                archivo.write(linea + "\n")
+
+    def convertir_producto_a_texto(self, producto):
+        return f"{producto.codigo},{producto.nombre},{producto.tipo_producto},{producto.cantidad_bodega},{producto.cantidad_minima},{producto.valor_unitario}"
+        
 class Factura():
     def __init__(self):
         self.num_factura = None
@@ -266,8 +289,10 @@ class Venta():
         self.iva = 0.15 # hay que cambiar
         self.precio_total = self.calcular_iva()
         self.total = self.cantidad_vendida * self.precio_total 
+    
     def __str__(self):
-        return (f"{self.codigo}---{self.nombre_producto}---{self.cantidad_vendida}---${self.precio_unitario}---{self.iva*100}%---${self.precio_total}---${self.total}")
+        #return (f"{self.codigo}---{self.nombre_producto}---{self.cantidad_vendida}---${self.precio_unitario}---{self.iva*100}%---${self.precio_total}---${self.total}")
+        return f"{self.codigo:<10} {self.nombre_producto:<20} {self.cantidad_vendida:<8} ${self.precio_unitario:<9.2f} {self.iva*100:<5.1f}% ${self.precio_total:<9.2f} ${self.total:<9.2f}"  
     def calcular_iva(self):
         return (self.precio_unitario +(self.iva * self.precio_unitario)) * self.cantidad_vendida
         
